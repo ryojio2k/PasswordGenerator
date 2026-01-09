@@ -1,0 +1,11 @@
+from enum import Enum
+
+class character_type(Enum):
+  ALPHABETS = 0
+  ALPHABETS_SIGNS = 1
+  ALPHABETS_NUMBERS = 2
+  ALPHABETS_NUMBERS_SIGNS = 3
+
+ALPHABETS_U = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ALPHABETS_L = "abcdefghijklmnopqrstuvwxyz"
+NUMBERS = "0123456789"
