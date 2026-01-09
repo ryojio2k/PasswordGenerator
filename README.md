@@ -1,5 +1,5 @@
-# TkEasyGUI_Sample
-TkEasyGUIでのアプリケーションサンプル(テンプレート)
+# Password Generator
+パスワードを自動生成するスクリプト
 
 # ファイル内訳
 
@@ -40,23 +40,23 @@ TkEasyGUIでのアプリケーションサンプル(テンプレート)
 # 実行
 
 ## コマンドラインでの実行
-  コマンドラインから下記を実行すると、検索を行うことが可能です。
+  コマンドラインから下記を実行すると、デフォルト状態でパスワードが生成されます。
   
-  `python fec.py {検索対象親ディレクトリのパス}`
+  `python pwg.py`
 
 # GUIアプリケーション
 
 ## 実行
   コマンドラインから下記を実行すると、開発環境上でGUIアプリが開きます。
 
-  `python gui_fec.py`
+  `python gui_pwg.py`
 
 ## 作成
   コマンドラインから下記を実行することでGUIのexeを作成することが可能です。
   
-  `pyinstaller -wF ./gui_fec.py`
+  `pyInstaller -wF ./gui_pwg.py`
 
 ## 設定ファイルについて
   初回起動時はデフォルトですが、一度実行完了すると下記ディレクトリに設定ファイルが生成されます。
-  ./settings/settings_gui_fec.json
+  ./settings/settings_gui_pwg.json
   保存内容は「前回実行時の検索対象親ディレクトリ」です。

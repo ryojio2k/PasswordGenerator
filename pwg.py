@@ -8,11 +8,11 @@ def pwg(digit=8,num=10,charactor_type=const.character_type.ALPHABETS_NUMBERS_SIG
   # 生成対象文字の絞り込み
   charactors = [const.ALPHABETS_L, const.ALPHABETS_U]
   match charactor_type:
-    case const.character_type.ALPHABETS_SIGNS:
+    case const.character_type.ALPHABETS_SIGNS.value:
       charactors.append(signs)
-    case const.character_type.ALPHABETS_NUMBERS:
+    case const.character_type.ALPHABETS_NUMBERS.value:
       charactors.append(const.NUMBERS)
-    case const.character_type.ALPHABETS_NUMBERS_SIGNS:
+    case const.character_type.ALPHABETS_NUMBERS_SIGNS.value:
       charactors.append(const.NUMBERS)
       charactors.append(signs)
   
