@@ -28,9 +28,7 @@
   
   `pip install -U pip`
   
-  `pip install pyinstaller`
-  
-  `pip install TkEasyGUI`
+  `pip install -r .\requirements.txt`
 
   VirtualBoxなどのLinux仮想環境の場合は以下を追加で実行ください。
   (tkinterがnot foundになる場合)
@@ -58,5 +56,12 @@
 
 ## 設定ファイルについて
   初回起動時はデフォルトですが、一度実行完了すると下記ディレクトリに設定ファイルが生成されます。
+  
   ./settings/settings_gui_pwg.json
-  保存内容は「前回実行時の検索対象親ディレクトリ」です。
+  
+  保存内容は下記の通りです。
+  ・digit(桁数)
+  ・num(生成するパスワードの数)
+  ・charactor_type(使用する文字の種類)
+  ・signs(使用する記号)
+  ・first_charactor_alphabets(先頭を必ず英字とする)

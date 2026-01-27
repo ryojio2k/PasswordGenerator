@@ -5,17 +5,28 @@ import pwg
 
 charactor_type_keys = ["-CHARACTOR_TYPE_ALPHABETS-", "-CHARACTOR_TYPE_ALPHABETS_SIGNS-", "-CHARACTOR_TYPE_ALPHABETS_NUMBERS-", "-CHARACTOR_TYPE_ALPHABETS_NUMBERS_SIGNS-"]
 
+# 使用する文字の種類をkeyからintに変換する
 def get_charactor_type_int(values):
   for i in range(len(charactor_type_keys)):
     if values[charactor_type_keys[i]]:
       return i
   return 0
 
+# 使用する文字の種類の選択状況を返却する
 def get_charactor_type_key(values):
   for i in range(len(charactor_type_keys)):
     if values[charactor_type_keys[i]]:
       return charactor_type_keys[i]
   return charactor_type_keys[0]
+
+# UI初期化
+def feedback_ui(window, setting_json):
+  window["-DIGIT-"].update(setting_json["digit"])
+  window["-NUM-"].update(setting_json["num"])
+  window["-SIGNS-"].update(setting_json["signs"])
+  window["-FIRST_CHARACTOR_ALPHABETS-"].update(setting_json["first_charactor_alphabets"])
+  last_selected_charactor_types = setting_json["charactor_type"]
+  window[last_selected_charactor_types].select()
 
 # 設定ファイル
 setting_json_file = "./settings/settings_gui_pwg.json"
@@ -113,8 +124,9 @@ while window.is_alive():
     print('exit')
     break
 
-  # ボタンが押された場合
+  # 実行ボタン押下時
   if event == 'button_execute':
+    # 各入力値を変数に格納
     digit = int(values['-DIGIT-'])
     num = int(values["-NUM-"])
     signs = values["-SIGNS-"]
@@ -122,26 +134,31 @@ while window.is_alive():
     charactor_type = get_charactor_type_int(values)
     output = window['-OUTPUT-']
 
+    # 設定jsonに反映
     setting_json["digit"] = digit
     setting_json["num"] = num
     setting_json["signs"] = signs
     setting_json["first_charactor_alphabets"] = first_charactor_alphabets
     setting_json["charactor_type"] = get_charactor_type_key(values)
 
+    # setting.json更新
     with open(setting_json_file, "w", encoding="utf-8") as f:
       json.dump(setting_json, f, indent=2)
 
+    # パスワード列生成
     passwords = pwg.pwg(digit,num,charactor_type,signs,first_charactor_alphabets)
+    # 出力
     output.update(disabled=False)
     output.update("")
     for password in passwords:
       output.print(password)
     output.update(disabled=True)
   
+  # 初期状態に戻すボタン押下時
   if event == 'button_initialize':
+    # デフォルト設定を読み込む
     setting_json = json.loads(setting_json_default)
-    with open(setting_json_file, "w", encoding="utf-8") as f:
-      json.dump(setting_json, f, indent=2)
-    window.close()
+    # 表示反映
+    feedback_ui(window, setting_json)
 
 window.close()
