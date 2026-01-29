@@ -19,6 +19,33 @@ def get_charactor_type_key(values):
       return charactor_type_keys[i]
   return charactor_type_keys[0]
 
+# Outputの更新
+def update_output(text=''):
+  output.update(disabled=False)
+  output.update(text)
+  output.update(disabled=True)
+
+# Outputウインドウのリサイズ
+def set_output_size(window, x, y):
+  window["-OUTPUT-"].widget.configure(width=x, height=y)
+
+# ファイルの保存
+def save_as_textfile(lines):
+  file_path = teg.popup_get_file(
+    message="保存先を選択してください",
+    save_as=True,
+    file_types=(("Text Files", "*.txt"), ("All Files", "*.*")),
+    default_extension=".txt"
+  )
+  
+  if file_path:
+    try:
+      with open(file_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+      teg.popup(f"保存しました\n{file_path}")
+    except Exception as e:
+      teg.popup(f"エラー\n{e}")
+
 # UI初期化
 def feedback_ui(window, setting_json):
   window["-DIGIT-"].update(setting_json["digit"])
@@ -27,6 +54,8 @@ def feedback_ui(window, setting_json):
   window["-FIRST_CHARACTOR_ALPHABETS-"].update(setting_json["first_charactor_alphabets"])
   last_selected_charactor_types = setting_json["charactor_type"]
   window[last_selected_charactor_types].select()
+  update_output('')
+  set_output_size(window, setting_json["digit"], setting_json["num"])
 
 # 設定ファイル
 setting_json_file = "./settings/settings_gui_pwg.json"
@@ -87,6 +116,14 @@ frame_submit = teg.Frame('',
   ]
 )
 
+frame_save = teg.Frame('',
+  [
+    [
+      teg.Submit(button_text='保存', key='button_save')
+    ]
+  ]
+)
+
 frame_initialize = teg.Frame('',
   [
     [
@@ -99,7 +136,7 @@ frame_initialize = teg.Frame('',
 frame_log = teg.Frame('ログ出力',
   [
     [
-      teg.Output(key='-OUTPUT-', size=(20, 20), autoscroll=True, disabled=True),
+      teg.Output(key='-OUTPUT-', size=(setting_json["digit"], setting_json["num"]), autoscroll=True, disabled=True),
     ],
   ]
 )
@@ -107,12 +144,14 @@ frame_log = teg.Frame('ログ出力',
 # レイアウト
 layout = [
   [ frame1, frame2 ],
-  [ frame_submit, frame_initialize ],
+  [ frame_submit, frame_save, frame_initialize ],
   [ frame_log ]
 ]
 
 # Window生成
 window = teg.Window('Password Generator', layout)
+
+passwords = []
 
 # GUI表示実行部分
 while window.is_alive():
@@ -133,6 +172,7 @@ while window.is_alive():
     first_charactor_alphabets = bool(values["-FIRST_CHARACTOR_ALPHABETS-"])
     charactor_type = get_charactor_type_int(values)
     output = window['-OUTPUT-']
+    set_output_size(window, digit, num)
 
     # 設定jsonに反映
     setting_json["digit"] = digit
@@ -148,14 +188,18 @@ while window.is_alive():
     # パスワード列生成
     passwords = pwg.pwg(digit,num,charactor_type,signs,first_charactor_alphabets)
     # 出力
-    output.update(disabled=False)
-    output.update("")
-    for password in passwords:
-      output.print(password)
-    output.update(disabled=True)
+    update_output("\n".join(passwords))
   
+  # 保存ボタン押下時
+  if event == 'button_save':
+    if len(passwords) <= 0:
+      teg.popup('パスワードを生成してください')
+    else:
+      save_as_textfile(passwords)
+
   # 初期状態に戻すボタン押下時
   if event == 'button_initialize':
+    passwords = []
     # デフォルト設定を読み込む
     setting_json = json.loads(setting_json_default)
     # 表示反映
