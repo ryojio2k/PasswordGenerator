@@ -3,10 +3,10 @@ import sys
 import random
 import const
 
-def pwg(digit=8,num=10,charactor_type=const.character_type.ALPHABETS_NUMBERS_SIGNS,signs='_?',first_charactor_alphabets=False):
+def pwg(digit:int=8,num:int=10,charactor_type=const.character_type.ALPHABETS_NUMBERS_SIGNS,signs:str='_?',first_charactor_alphabets:bool=False) -> list[str]:
 
   # 生成対象文字の絞り込み
-  charactors = [const.ALPHABETS_L, const.ALPHABETS_U]
+  charactors: list[str] = [const.ALPHABETS_L, const.ALPHABETS_U]
   match charactor_type:
     case const.character_type.ALPHABETS_SIGNS.value:
       charactors.append(signs)
@@ -17,10 +17,10 @@ def pwg(digit=8,num=10,charactor_type=const.character_type.ALPHABETS_NUMBERS_SIG
       charactors.append(signs)
   
   # 生成していく
-  passwords = []
+  passwords: list[str] = []
   for _ in range(num):
-    password = ''
-    biases = []
+    password: str = ''
+    biases: list[int] = []
     for _ in range(len(charactors)):
       biases.append(0)
     for i in range(digit):
@@ -35,21 +35,21 @@ def pwg(digit=8,num=10,charactor_type=const.character_type.ALPHABETS_NUMBERS_SIG
 
   return passwords
 
-def least_charactors_index(biases):
-  idxs = []
-  min_value = 65535
+def least_charactors_index(biases:list[int]) -> int:
+  idxs:list[int] = []
+  min_value:int = 65535
   for i in range(len(biases)):
     if biases[i] < min_value:
       idxs = [i]
       min_value = biases[i]
     elif biases[i] == min_value:
       idxs.append(i)
-  idx = idxs[0]
+  idx:int = idxs[0]
   if len(idxs) > 1:
     idx = idxs[random.randint(0, len(idxs)-1)]
   return idx
 
 if __name__ == "__main__":
-  passwords = pwg()
+  passwords: list[str] = pwg()
   for password in passwords:
     print(password)

@@ -1,6 +1,6 @@
 import os
 import json
-import TkEasyGUI as teg
+import TkEasyGUI as teg # type: ignore
 import pwg
 
 charactor_type_keys = ["-CHARACTOR_TYPE_ALPHABETS-", "-CHARACTOR_TYPE_ALPHABETS_SIGNS-", "-CHARACTOR_TYPE_ALPHABETS_NUMBERS-", "-CHARACTOR_TYPE_ALPHABETS_NUMBERS_SIGNS-"]
@@ -22,7 +22,7 @@ def get_charactor_type_key(values):
 # Outputの更新
 def update_output(input_data: str | list[str]):
   # 文字列の場合は配列化する
-  lines = [input_data] if isinstance(input_data, str) else input_data
+  lines: list[str] = [input_data] if isinstance(input_data, str) else input_data
   output.update(disabled=False)
   output.update('')
   for line in lines:
@@ -37,7 +37,7 @@ def set_output_size(window, x, y):
 
 # ファイルの保存
 def save_as_textfile(input_data: str | list[str]):
-  lines = [input_data] if isinstance(input_data, str) else input_data
+  lines: list[str] = [input_data] if isinstance(input_data, str) else input_data
   file_path = teg.popup_get_file(
     message="保存先を選択してください",
     save_as=True,
@@ -159,7 +159,7 @@ layout = [
 # Window生成
 window = teg.Window('Password Generator', layout)
 
-passwords = []
+passwords: list[str] = []
 
 # GUI表示実行部分
 while window.is_alive():
