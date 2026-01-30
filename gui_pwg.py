@@ -20,17 +20,24 @@ def get_charactor_type_key(values):
   return charactor_type_keys[0]
 
 # Outputの更新
-def update_output(text=''):
+def update_output(input_data: str | list[str]):
+  # 文字列の場合は配列化する
+  lines = [input_data] if isinstance(input_data, str) else input_data
   output.update(disabled=False)
-  output.update(text)
+  output.update('')
+  for line in lines:
+    output.print(line)
   output.update(disabled=True)
 
 # Outputウインドウのリサイズ
 def set_output_size(window, x, y):
-  window["-OUTPUT-"].widget.configure(width=x, height=y)
+  w = x+1
+  h = y+1
+  window["-OUTPUT-"].widget.configure(width=w, height=h)
 
 # ファイルの保存
-def save_as_textfile(lines):
+def save_as_textfile(input_data: str | list[str]):
+  lines = [input_data] if isinstance(input_data, str) else input_data
   file_path = teg.popup_get_file(
     message="保存先を選択してください",
     save_as=True,
@@ -41,7 +48,8 @@ def save_as_textfile(lines):
   if file_path:
     try:
       with open(file_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+        for line in lines:
+          print(line, file=f)
       teg.popup(f"保存しました\n{file_path}")
     except Exception as e:
       teg.popup(f"エラー\n{e}")
@@ -136,7 +144,7 @@ frame_initialize = teg.Frame('',
 frame_log = teg.Frame('ログ出力',
   [
     [
-      teg.Output(key='-OUTPUT-', size=(setting_json["digit"], setting_json["num"]), autoscroll=True, disabled=True),
+      teg.Output(key='-OUTPUT-', size=(setting_json["digit"]+1, setting_json["num"]+1), autoscroll=True, disabled=True),
     ],
   ]
 )
@@ -188,7 +196,7 @@ while window.is_alive():
     # パスワード列生成
     passwords = pwg.pwg(digit,num,charactor_type,signs,first_charactor_alphabets)
     # 出力
-    update_output("\n".join(passwords))
+    update_output(passwords)
   
   # 保存ボタン押下時
   if event == 'button_save':
