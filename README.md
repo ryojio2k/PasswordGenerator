@@ -18,7 +18,7 @@
   `./.venv/Scripts/activate`
 
   ### Mac OS
-  `source ./.venv/Scripts/activate`
+  `source ./.venv/bin/activate`
 
   ### Linux
   `source ./.venv/bin/activate`
